@@ -6,21 +6,20 @@
  *     Right *TreeNode
  * }
  */
+
 func hasPathSum(root *TreeNode, targetSum int) bool {
 	if root == nil {
 		return false
 	}
-
-	return dfs(root, 0, targetSum)
-}
-
-func dfs(root *TreeNode, curSum, targetSum int) bool {
-	if root == nil {
-		return false
-	}
-	curSum += root.Val
-	if curSum == targetSum && root.Left == nil && root.Right == nil {
+	if isChild(root) && targetSum == root.Val {
 		return true
 	}
-	return dfs(root.Left, curSum, targetSum) || dfs(root.Right, curSum, targetSum)
+	if hasPathSum(root.Left, targetSum-root.Val) || hasPathSum(root.Right, targetSum-root.Val) {
+		return true
+	}
+	return false
+}
+
+func isChild(node *TreeNode) bool {
+	return node.Left == nil && node.Right == nil
 }

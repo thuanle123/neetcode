@@ -1,32 +1,19 @@
 class Solution {
 public:
-    bool wordPattern(string pattern, string s) {
-        stringstream ss(s);
-        vector<string> sWords;
-        string word;
-        while(ss >> word){
-            sWords.push_back(word);
+    bool wordPattern(string pattern, string str) {
+        vector<int> pat_map (26, 0);
+        unordered_map<string,int> str_map;
+        int i=0, n = pattern.size();
+        istringstream ss (str);
+        string token;
+        
+        for(string token; ss >> token; ++i) {
+            if(i == n || pat_map[pattern[i]-'a'] != str_map[token]) return false;
+            
+            // 1-based indexing since map assigns 0 as a default value for keys not found.
+            pat_map[pattern[i]-'a'] = str_map[token] = i+1;
         }
-
-        if(pattern.size() != sWords.size()){
-            return false;
-        }
-
-        unordered_map<char, string> patternMap;
-        unordered_map<string, char> sMap;
-
-        for(int i = 0; i < pattern.size(); i++){
-            if(patternMap.count(pattern[i]) && patternMap[pattern[i]] != sWords[i]){
-                return false;
-            }
-            if(sMap.count(sWords[i]) && sMap[sWords[i]] != pattern[i]){
-                return false;
-            }
-          
-            patternMap[pattern[i]] = sWords[i];
-            sMap[sWords[i]] = pattern[i];
-        }
-
-        return true;
+        
+        return i == n;
     }
 };
